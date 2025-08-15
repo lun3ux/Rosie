@@ -2,7 +2,10 @@ package frc.robot.subsystems;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.function.DoubleSupplier;
+
+import com.ctre.phoenix6.hardware.Pigeon2;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -12,7 +15,9 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import swervelib.imu.Pigeon2Swerve;
 import swervelib.SwerveDrive;
+
 
 import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
@@ -21,6 +26,8 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 public class SwerveDriveSubsystem extends SubsystemBase {
     SwerveDrive swerveDrive;
     private boolean fieldRelative = true;
+    public Pigeon2Swerve pigeon = new Pigeon2Swerve(20);
+    
 
     public SwerveDriveSubsystem(){
 

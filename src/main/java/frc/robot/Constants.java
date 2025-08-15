@@ -20,4 +20,9 @@ public final class Constants {
 	public static class OperatorConstants {
 		public static final int kDriverControllerPort = 0;
 	}
+
+	public static class ComponentIDs {
+		public static final int PigeonID = 20;
+		
+	}
 }

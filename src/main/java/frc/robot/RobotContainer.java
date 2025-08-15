@@ -79,16 +79,7 @@ public class RobotContainer {
 	private void configureBindings() {
 
 		m_driverController.x().onTrue((Commands.runOnce(m_swerve::zeroGyro)));
-
-		m_driverController.b().onTrue((Commands.runOnce(m_swerve::toggleDriveMode)));
-
-		// m_driverController.povDown().onTrue(elevator.goToStow());
-		// m_driverController.povRight().onTrue(elevator.goToL2());
-		// m_driverController.povUp().onTrue(elevator.goToL3());
-		// m_driverController.leftTrigger().whileTrue(intake.Intake());
-		// m_driverController.rightTrigger().whileTrue(intake.Outtake());
-		// m_driverController.y().whileTrue(elevator.ElevatorUp());
-		// m_driverController.a().whileTrue(elevator.ElevatorDown());
+\
 	}
 
 
