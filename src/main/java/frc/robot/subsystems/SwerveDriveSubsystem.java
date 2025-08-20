@@ -46,9 +46,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         
 
     } 
-    public boolean isFieldRelative() {
-        return fieldRelative;
-    }
 
 
     public Command driveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier angularRotationX) {
@@ -63,14 +60,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         });
     }
 
-    public void toggleDriveMode() {
-        fieldRelative = !fieldRelative;
-    }
-
     public void zeroGyro()
     {
         swerveDrive.zeroGyro();
-        swerveDrive.setGyro(new Rotation3d(0,0,Math.PI));
+        swerveDrive.setGyro(new Rotation3d(0,0,0));
     }
     @Override
     public void periodic() {
