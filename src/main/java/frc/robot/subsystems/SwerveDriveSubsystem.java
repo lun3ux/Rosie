@@ -37,7 +37,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
             swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(maximumSpeed);
              SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
             //  swerveDrive.setChassisDiscretization(true, .02);
-             swerveDrive.setHeadingCorrection(true);
+             swerveDrive.setHeadingCorrection(false);
 
         } catch(IOException e){
 
@@ -58,12 +58,11 @@ public class SwerveDriveSubsystem extends SubsystemBase {
                 false
             );
         });
-    }
+    }    
 
     public void zeroGyro()
     {
         swerveDrive.zeroGyro();
-        swerveDrive.setGyro(new Rotation3d(0,0,0));
     }
     @Override
     public void periodic() {
@@ -71,3 +70,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumberArray("SwerveModuleStates", swervelib.telemetry.SwerveDriveTelemetry.measuredStates);
     }
 }
+
+
+

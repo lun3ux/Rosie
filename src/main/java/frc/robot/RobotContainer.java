@@ -48,12 +48,11 @@ public class RobotContainer {
 		// target height
 
 		m_swerve.setDefaultCommand(m_swerve.driveCommand(
-				() -> -MathUtil.applyDeadband(m_driverController.getRawAxis(1), 0.1),
-				() -> -MathUtil.applyDeadband(m_driverController.getRawAxis(0), 0.1),
-				() -> MathUtil.applyDeadband(m_driverController.getRawAxis(4), 0.1)// ,
-		// m_driverController.getRawAxis(2) > .5
-
-		));
+			() -> -MathUtil.applyDeadband(m_driverController.getRawAxis(1), 0.1), // forward/back (invert)
+			() ->  MathUtil.applyDeadband(m_driverController.getRawAxis(0), 0.1), // left/right (no invert)
+			() -> -MathUtil.applyDeadband(m_driverController.getRawAxis(4), 0.1)  // rotation (usually invert)
+		 ));
+		    
 
 		// Configure the trigger bindings
 		configureBindings();
