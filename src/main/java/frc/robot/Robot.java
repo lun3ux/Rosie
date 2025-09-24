@@ -123,9 +123,6 @@ public class Robot extends TimedRobot {
 		if (controller.getBButton()) {
 			programmingExampleSubsystem.score();
 		}
-		else {
-			programmingExampleSubsystem.stop();
-		}
 	}
 
 	@Override

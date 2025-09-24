@@ -43,9 +43,7 @@ public class ProgrammingExampleSubsystem extends SubsystemBase {
         intakeMotor.set(0.5);
     }
 
-    public void stop() {
-        intakeMotor.set(0);
-    }
+ 
 
 
 }

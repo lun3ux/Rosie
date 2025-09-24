@@ -49,7 +49,7 @@ public class RobotContainer {
 
 		m_swerve.setDefaultCommand(m_swerve.driveCommand(
 			() -> -MathUtil.applyDeadband(m_driverController.getRawAxis(1), 0.0), // forward/back (invert)
-			() ->  MathUtil.applyDeadband(m_driverController.getRawAxis(0),0.1), // left/right (no invert)
+			() ->  MathUtil.applyDeadband(m_driverController.getRawAxis(0), 0.0), // left/right (no invert)
 			() -> -MathUtil.applyDeadband(m_driverController.getRawAxis(4), 0.0)  // rotation (usually invert)
 		 ));
 		    
