@@ -19,6 +19,7 @@ import frc.robot.Constants;
 import swervelib.imu.Pigeon2Swerve;
 import swervelib.math.SwerveMath;
 import swervelib.SwerveDrive;
+import swervelib.SwerveInputStream;
 import edu.wpi.first.math.util.Units;
 
 
@@ -28,11 +29,8 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 public class SwerveDriveSubsystem extends SubsystemBase {
     SwerveDrive swerveDrive;
-    double maximumSpeed = Units.feetToMeters(4.5);
-    private boolean fieldRelative = true;
     public Pigeon2Swerve pigeon = new Pigeon2Swerve(20);
     
-
     public SwerveDriveSubsystem(){
 
         double maximumSpeed = Constants.maximumSpeed;
@@ -40,6 +38,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
              File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
             swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(maximumSpeed);
              SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
+             
             //  swerveDrive.setChassisDiscretization(true, .02);
              swerveDrive.setHeadingCorrection(false);
 
@@ -72,7 +71,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     return run(() -> {
 
       Translation2d scaledInputs = SwerveMath.scaleTranslation(new Translation2d(translationX.getAsDouble(),
-                                                                                 translationY.getAsDouble()*1000000), 0.8);
+                                                                                 translationY.getAsDouble()), 1);
 
       // Make the robot move
       driveFieldOriented(swerveDrive.swerveController.getTargetSpeeds(scaledInputs.getX(), scaledInputs.getY(),
@@ -96,12 +95,17 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     return run(() -> {
       // Make the robot move
       swerveDrive.drive(new Translation2d(translationX.getAsDouble() * Constants.GetmaximumSpeed(),
-                                          -translationY.getAsDouble() * Constants.GetmaximumSpeed()),
+                                          translationY.getAsDouble() * Constants.GetmaximumSpeed()),
                         angularRotationX.getAsDouble() * Constants.GetmaximumangularSpeed(),
-                        true,
-                        false);
+                        false,
+                        true);
     });
   }
+
+    public SwerveDrive getSwerveDrive() {
+      return swerveDrive;
+    }
+
 
     public void zeroGyro()
     {
@@ -111,6 +115,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putNumberArray("Measured States", swervelib.telemetry.SwerveDriveTelemetry.measuredChassisSpeeds);
         SmartDashboard.putNumberArray("SwerveModuleStates", swervelib.telemetry.SwerveDriveTelemetry.measuredStates);
+        
     }
 }
 

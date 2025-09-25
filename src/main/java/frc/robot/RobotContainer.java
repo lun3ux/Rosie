@@ -46,13 +46,31 @@ public class RobotContainer {
 		// intake = new IntakeSubsystem(21);
 		// Command moveElevatorToTop = elevator.goToSetpointCommand(50.0); // Example
 		// target height
+		SwerveInputStream driveAngularVelocity = SwerveInputStream.of(m_swerve.getSwerveDrive(),
+		() -> driverXbox.getLeftY() * -1,
+		() -> driverXbox.getLeftX() * -1) // Axis which give the desired translational angle and speed.
+	    .withControllerRotationAxis(XboxController::getRightX) // Axis which give the desired angular velocity.
+	    .deadband(0.01)                  // Controller deadband
+	    .scaleTranslation(0.8)           // Scaled controller translation axis
+	    .allianceRelativeControl(true);  // Alliance relative controls.
+
+	       SwerveInputStream driveDirectAngle = driveAngularVelocity.copy()  // Copy the stream so further changes do not affect driveAngularVelocity
+	   .withControllerHeadingAxis(XboxController::getRightX,
+				      XboxController::getRightY) // Axis which give the desired heading angle using trigonometry.
+	   .headingWhile(true); // Enable heading based control
 
 		m_swerve.setDefaultCommand(m_swerve.driveCommand(
 			() -> -MathUtil.applyDeadband(m_driverController.getRawAxis(1), 0.0), // forward/back (invert)
-			() ->  MathUtil.applyDeadband(m_driverController.getRawAxis(0), 0.0), // left/right (no invert)
+			
+			() ->  -MathUtil.applyDeadband(m_driverController.getRawAxis(0), 0.0), // left/right (no invert)
 			() -> -MathUtil.applyDeadband(m_driverController.getRawAxis(4), 0.0)  // rotation (usually invert)
 		 ));
 		    
+
+		
+
+
+
 
 		// Configure the trigger bindings
 		configureBindings();
