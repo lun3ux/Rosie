@@ -11,6 +11,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import swervelib.SwerveInputStream;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -47,17 +48,17 @@ public class RobotContainer {
 		// Command moveElevatorToTop = elevator.goToSetpointCommand(50.0); // Example
 		// target height
 		SwerveInputStream driveAngularVelocity = SwerveInputStream.of(m_swerve.getSwerveDrive(),
-		() -> driverXbox.getLeftY() * -1,
-		() -> driverXbox.getLeftX() * -1) // Axis which give the desired translational angle and speed.
-	    .withControllerRotationAxis(XboxController::getRightX) // Axis which give the desired angular velocity.
-	    .deadband(0.01)                  // Controller deadband
-	    .scaleTranslation(0.8)           // Scaled controller translation axis
-	    .allianceRelativeControl(true);  // Alliance relative controls.
+		() -> m_driverController.getLeftY() * -1,
+		() -> m_driverController.getLeftX() * -1) // Axis which give the desired translational angle and speed.
+		.withControllerRotationAxis(m_driverController::getRightX) // Axis which give the desired angular velocity.
+		.deadband(0.01)                  // Controller deadband
+		.scaleTranslation(0.8)           // Scaled controller translation axis
+		.allianceRelativeControl(true);  // Alliance relative controls.
 
 	       SwerveInputStream driveDirectAngle = driveAngularVelocity.copy()  // Copy the stream so further changes do not affect driveAngularVelocity
-	   .withControllerHeadingAxis(XboxController::getRightX,
-				      XboxController::getRightY) // Axis which give the desired heading angle using trigonometry.
-	   .headingWhile(true); // Enable heading based control
+		.withControllerHeadingAxis(m_driverController::getRightX,
+					m_driverController::getRightY) // Axis which give the desired heading angle using trigonometry.
+		.headingWhile(true); // Enable heading based control
 
 		m_swerve.setDefaultCommand(m_swerve.driveCommand(
 			() -> -MathUtil.applyDeadband(m_driverController.getRawAxis(1), 0.0), // forward/back (invert)
@@ -65,9 +66,7 @@ public class RobotContainer {
 			() ->  -MathUtil.applyDeadband(m_driverController.getRawAxis(0), 0.0), // left/right (no invert)
 			() -> -MathUtil.applyDeadband(m_driverController.getRawAxis(4), 0.0)  // rotation (usually invert)
 		 ));
-		    
-
-		
+		    		
 
 
 
