@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Rotation;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Array;
@@ -30,8 +32,10 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 public class SwerveDriveSubsystem extends SubsystemBase {
     SwerveDrive swerveDrive;
     public Pigeon2Swerve pigeon = new Pigeon2Swerve(20);
-    
+
     public SwerveDriveSubsystem(){
+    swerveDrive.setCosineCompensator(false); // Disables cosine compensation for simulations since it causes discrepancies not seen in real life.
+    swerveDrive.setGyroOffset(new Rotation3d(0,0,-154.69));
 
         double maximumSpeed = Constants.maximumSpeed;
         try{
@@ -40,8 +44,9 @@ public class SwerveDriveSubsystem extends SubsystemBase {
              SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
              
             //  swerveDrive.setChassisDiscretization(true, .02);
-             swerveDrive.setHeadingCorrection(false);
-
+             swerveDrive.setHeadingCorrection(true);
+             swerveDrive.setCosineCompensator(false);
+             swerveDrive.pushOffsetsToEncoders();
         } catch(IOException e){
 
             throw new RuntimeException(e);
@@ -117,6 +122,12 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumberArray("SwerveModuleStates", swervelib.telemetry.SwerveDriveTelemetry.measuredStates);
         
     }
+
+    public Command driveCommand(SwerveInputStream inputStream) {
+      return run(() -> {
+          driveFieldOriented(inputStream.get());
+      });
+  }
 }
 
 

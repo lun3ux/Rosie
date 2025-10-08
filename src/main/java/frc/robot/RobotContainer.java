@@ -60,12 +60,9 @@ public class RobotContainer {
 					m_driverController::getRightY) // Axis which give the desired heading angle using trigonometry.
 		.headingWhile(true); // Enable heading based control
 
-		m_swerve.setDefaultCommand(m_swerve.driveCommand(
-			() -> -MathUtil.applyDeadband(m_driverController.getRawAxis(1), 0.0), // forward/back (invert)
-			
-			() ->  -MathUtil.applyDeadband(m_driverController.getRawAxis(0), 0.0), // left/right (no invert)
-			() -> -MathUtil.applyDeadband(m_driverController.getRawAxis(4), 0.0)  // rotation (usually invert)
-		 ));
+		m_swerve.setDefaultCommand(
+			m_swerve.driveCommand(driveAngularVelocity) // or driveDirectAngle
+		);
 		    		
 
 
