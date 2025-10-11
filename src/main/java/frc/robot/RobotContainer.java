@@ -7,7 +7,13 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.SwerveDriveSubsystem;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -24,6 +30,7 @@ import swervelib.SwerveInputStream;
  */
 
 public class RobotContainer {
+	  private final SendableChooser<Command> autoChooser;
 	// The robot's subsystems and commands are defined here...
 	private SwerveDriveSubsystem m_swerve;
 
@@ -42,6 +49,7 @@ public class RobotContainer {
 	public RobotContainer() {
 
 		m_swerve = new SwerveDriveSubsystem();		
+   		 autoChooser = AutoBuilder.buildAutoChooser();
 
 		// elevator = new ElevatorSubsystem(20);
 		// intake = new IntakeSubsystem(21);
@@ -69,11 +77,11 @@ public class RobotContainer {
 		    		
 
 
+		SmartDashboard.putData("Auto Chooser", autoChooser);
 
 
 		// Configure the trigger bindings
 		configureBindings();
-		
 	}
 
 	/**
@@ -91,15 +99,16 @@ public class RobotContainer {
 	 * joysticks}.
 	 * 
 	 * */
-
 	private void configureBindings() {
 
 		m_driverController.x().onTrue((Commands.runOnce(m_swerve::zeroGyro)));
 	
 	}
-
-
-	
-
+	public Command getAutonomousCommand() {
+		// This method loads the auto when it is called, however, it is recommended
+		// to first load your paths/autos when code starts, then return the
+		// pre-loaded auto/path
+		return new PathPlannerAuto("Example Auto");
+	}
 
 }
