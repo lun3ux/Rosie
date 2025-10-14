@@ -8,17 +8,27 @@ import java.lang.reflect.Array;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.Odometry;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.geometry.Pose2d;
 //import edu.wpi.first.math.geometry.Rotation2d.fromDegrees;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import swervelib.imu.Pigeon2Swerve;
 import swervelib.math.SwerveMath;
 import swervelib.SwerveDrive;
@@ -31,7 +41,9 @@ import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 public class SwerveDriveSubsystem extends SubsystemBase {
+
     SwerveDrive swerveDrive;
+    public final Field2d m_field = new Field2d();
     public Pigeon2Swerve pigeon = new Pigeon2Swerve(20);
 
     public SwerveDriveSubsystem(){
@@ -58,6 +70,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
 
     } 
+
+	@SuppressWarnings("rawtypes")
+  public Odometry odometry;
+
 
   public void driveFieldOriented(ChassisSpeeds velocity)
   {
@@ -110,6 +126,55 @@ public class SwerveDriveSubsystem extends SubsystemBase {
                         true);
     });
   }
+  public ChassisSpeeds getRelativeSpeeds() {
+    return swerveDrive.getFieldVelocity();
+  }
+
+	public Pose2d getPose() {
+		if (Robot.isSimulation())
+		{
+			return this.m_field.getRobotPose();
+		}
+		return swerveDrive.getPose();
+	}
+
+
+  private void setupPathPlanner() {
+		RobotConfig config;
+		try {
+			config = RobotConfig.fromGUISettings();
+		} catch (Exception e) {
+			// Handle exception as needed
+			e.printStackTrace();
+			return;
+		}
+		AutoBuilder.configure(
+			this::getPose,
+			(pose) -> {
+				// this.resetPose(pose);	
+			},
+			this::getRelativeSpeeds,
+			(speeds) -> this.driveFeedForward(speeds, false),
+			new PPHolonomicDriveController(
+					new PIDConstants(3.3, 0.0, 0), // Translation PID constants
+					new PIDConstants(Math.PI * 1.6, 0.0, 0) // Rotation PID constants
+			),
+			config,
+			() -> {
+				// Boolean supplier that controls when the path will be mirrored for the red
+				// alliance
+				// This will flip the path being followed to the red side of the field.
+				// THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+				var alliance = DriverStation.getAlliance();
+				if (alliance.isPresent()) {
+					return alliance.get() == DriverStation.Alliance.Red;
+				}
+				return false;
+			},
+			this);
+	}
+
 
     public SwerveDrive getSwerveDrive() {
       return swerveDrive;
