@@ -10,6 +10,7 @@ import java.util.function.DoubleSupplier;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 //import edu.wpi.first.math.geometry.Rotation2d.fromDegrees;
@@ -34,8 +35,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     public Pigeon2Swerve pigeon = new Pigeon2Swerve(20);
 
     public SwerveDriveSubsystem(){
-    swerveDrive.setCosineCompensator(false); // Disables cosine compensation for simulations since it causes discrepancies not seen in real life.
-    swerveDrive.setGyroOffset(new Rotation3d(0,0,-154.69));
+    // swerveDrive.setCosineCompensator(false); // Disables cosine compensation for simulations since it causes discrepancies not seen in real life.
+    // swerveDrive.setGyroOffset(new Rotation3d(0,0,-154.69));
 
         double maximumSpeed = Constants.maximumSpeed;
         try{
@@ -46,12 +47,15 @@ public class SwerveDriveSubsystem extends SubsystemBase {
             //  swerveDrive.setChassisDiscretization(true, .02);
              swerveDrive.setHeadingCorrection(true);
              swerveDrive.setCosineCompensator(false);
-             swerveDrive.pushOffsetsToEncoders();
+             //swerveDrive.pushOffsetsToEncoders();   
+             swerveDrive.restoreInternalOffset();     
+            CommandScheduler.getInstance().registerSubsystem(this);
+
         } catch(IOException e){
 
             throw new RuntimeException(e);
         }
-        
+
 
     } 
 
@@ -120,6 +124,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putNumberArray("Measured States", swervelib.telemetry.SwerveDriveTelemetry.measuredChassisSpeeds);
         SmartDashboard.putNumberArray("SwerveModuleStates", swervelib.telemetry.SwerveDriveTelemetry.measuredStates);
+        //SmartDashboard.putData();
         
     }
 
