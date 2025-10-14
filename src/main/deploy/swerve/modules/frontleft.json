@@ -3,11 +3,12 @@
     "front": 10.3740157,
     "left": 10.3740157
   },
-  "absoluteEncoderOffset": 0,
+  "absoluteEncoderOffset": 270,
   "drive": {
     "type": "sparkmax",
     "id": 1,
     "canbus": "rio"
+    
   },
   "angle": {
     "type": "sparkmax",

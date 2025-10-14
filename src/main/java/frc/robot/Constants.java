@@ -15,7 +15,7 @@ package frc.robot;
  */
 public final class Constants {
 
-	public static final double maximumSpeed = 5.3;
+	public static final double maximumSpeed = 3;
 	public static final double maximumAngleSpeed = 20;
 
 	public static class OperatorConstants {
