@@ -48,16 +48,16 @@ public class ProgrammingExampleSubsystem extends SubsystemBase {
     }
 
     public static void up() {
-        armMotor.set(0.1);
+        armMotor.set(0.2);
     }
     // Example score function
     public static void down() {
-        armMotor.set(-0.1);
+        armMotor.set(-0.2);
     }
 
     public static void stop() {
-        armMotor.set(0);
-        intakeMotor.set(0);
+        armMotor.stopMotor();
+        intakeMotor.stopMotor();
     }
 
 }

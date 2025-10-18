@@ -110,27 +110,19 @@ public class Robot extends TimedRobot {
 		}
 	}
 
-	/** This function is called periodically during operator control. */
 	@Override
 	public void teleopPeriodic() {
-		if (controller.getYButton())
-		{
-		 	ProgrammingExampleSubsystem.intake();
-		}
-		if (controller.getAButton()) {
+		if (controller.getYButton()) {
+			ProgrammingExampleSubsystem.intake();
+		} else if (controller.getAButton()) {
 			ProgrammingExampleSubsystem.score();
-		}
-		if (controller.getXButton()) {
+		} else if (controller.getXButton()) {
 			ProgrammingExampleSubsystem.up();
-		}
-		if (controller.getBButton()) {
+		} else if (controller.getBButton()) {
 			ProgrammingExampleSubsystem.down();
-		}
-		else {
+		} else {
 			ProgrammingExampleSubsystem.stop();
 		}
-
-
 	}
 
 	@Override
