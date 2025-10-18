@@ -38,7 +38,6 @@ public class RobotContainer {
 	// Replace with CommandPS4Controller or CommandJoystick if needed
 	private final CommandXboxController  m_driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
 	// private ElevatorSubsystem elevator;
-	// private IntakeSubsystem intake;
 
 	// private final Joystick m_driverController = new Joystick(0);
 	// private final Button robotCentric = new m_driverController.getAsBoolean();
@@ -55,7 +54,6 @@ public class RobotContainer {
 		
 
 		// elevator = new ElevatorSubsystem(20);
-		// intake = new IntakeSubsystem(21);
 		// Command moveElevatorToTop = elevator.goToSetpointCommand(50.0); // Example
 		// target height
 		SwerveInputStream driveAngularVelocity = SwerveInputStream.of(m_swerve.getSwerveDrive(),
