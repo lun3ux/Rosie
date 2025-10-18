@@ -31,7 +31,7 @@ import swervelib.SwerveInputStream;
  */
 
 public class RobotContainer {
-	  private final SendableChooser<Command> autoChooser;
+	//  private final SendableChooser<Command> autoChooser;
 	// The robot's subsystems and commands are defined here...
 	private SwerveDriveSubsystem m_swerve;
 
@@ -49,8 +49,7 @@ public class RobotContainer {
 	public RobotContainer() {
 
 		m_swerve = new SwerveDriveSubsystem();		
-   		 autoChooser = AutoBuilder.buildAutoChooser();
-		m_swerve = new SwerveDriveSubsystem();	
+   		// autoChooser = AutoBuilder.buildAutoChooser();
 		
 
 		// elevator = new ElevatorSubsystem(20);

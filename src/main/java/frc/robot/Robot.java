@@ -120,6 +120,15 @@ public class Robot extends TimedRobot {
 		if (controller.getAButton()) {
 			ProgrammingExampleSubsystem.score();
 		}
+		if (controller.getXButton()) {
+			ProgrammingExampleSubsystem.up();
+		}
+		if (controller.getBButton()) {
+			ProgrammingExampleSubsystem.down();
+		}
+		else {
+			ProgrammingExampleSubsystem.stop();
+		}
 
 
 	}
