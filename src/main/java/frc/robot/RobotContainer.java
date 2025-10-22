@@ -31,7 +31,7 @@ import swervelib.SwerveInputStream;
  */
 
 public class RobotContainer {
-	//  private final SendableChooser<Command> autoChooser;
+	 private final SendableChooser<Command> autoChooser;
 	// The robot's subsystems and commands are defined here...
 	private SwerveDriveSubsystem m_swerve;
 
@@ -49,15 +49,16 @@ public class RobotContainer {
 	public RobotContainer() {
 
 		m_swerve = new SwerveDriveSubsystem();		
-   		// autoChooser = AutoBuilder.buildAutoChooser();
+		autoChooser = AutoBuilder.buildAutoChooser();
+		SmartDashboard.putData("Auto Mode", autoChooser);
 		
 
 		// elevator = new ElevatorSubsystem(20);
 		// Command moveElevatorToTop = elevator.goToSetpointCommand(50.0); // Example
 		// target height
 		SwerveInputStream driveAngularVelocity = SwerveInputStream.of(m_swerve.getSwerveDrive(),
-		() -> m_driverController.getLeftY() * -1,
-		() -> m_driverController.getLeftX() * -1) // Axis which give the desired translational angle and speed.
+		() -> m_driverController.getLeftY(),
+		() -> m_driverController.getLeftX()) // Axis which give the desired translational angle and speed.
 		.withControllerRotationAxis(m_driverController::getRightX) // Axis which give the desired angular velocity.
 		.deadband(0.01)                  // Controller deadband
 		.scaleTranslation(0.8)           // Scaled controller translation axis
@@ -97,14 +98,15 @@ public class RobotContainer {
 	 * */
 	private void configureBindings() {
 
-		m_driverController.x().onTrue((Commands.runOnce(m_swerve::zeroGyro)));
+		//driverController.x().onTrue((Commands.runOnce(m_swerve::zeroGyro)));
 	
 	}
 	public Command getAutonomousCommand() {
 		// This method loads the auto when it is called, however, it is recommended
 		// to first load your paths/autos when code starts, then return the
 		// pre-loaded auto/path
-		return new PathPlannerAuto("Example Auto");
+		// return new PathPlannerAuto("Example Auto");
+		return autoChooser.getSelected();
 	}
 
 }

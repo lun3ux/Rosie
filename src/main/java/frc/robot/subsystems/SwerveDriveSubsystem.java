@@ -35,6 +35,8 @@ import swervelib.math.SwerveMath;
 import swervelib.SwerveDrive;
 import swervelib.SwerveInputStream;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
@@ -53,6 +55,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     // swerveDrive.setCosineCompensator(false); // Disables cosine compensation for simulations since it causes discrepancies not seen in real life.
     // swerveDrive.setGyroOffset(new Rotation3d(0,0,-154.69));
         Limelight.registerDevice("limelight");
+        setupPathPlanner();
         double maximumSpeed = Constants.maximumSpeed;
         try{
              File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
@@ -146,41 +149,41 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 	}
 
 
-  // private void setupPathPlanner() {
-	// 	RobotConfig config;
-	// 	try {
-	// 		config = RobotConfig.fromGUISettings();
-	// 	} catch (Exception e) {
-	// 		// Handle exception as needed
-	// 		e.printStackTrace();
-	// 		return;
-	// 	}
-	// 	AutoBuilder.configure(
-	// 		this::getPose,
-	// 		(pose) -> {
-	// 			// this.resetPose(pose);	
-	// 		},
-	// 		this::getRelativeSpeeds,
-	// 		(speeds) -> this.driveFieldOriented(speeds),
-	// 		new PPHolonomicDriveController(
-	// 				new PIDConstants(3.3, 0.0, 0), // Translation PID constants
-	// 				new PIDConstants(Math.PI * 1.6, 0.0, 0) // Rotation PID constants
-	// 		),
-	// 		config,
-	// 		() -> {
-	// 			// Boolean supplier that controls when the path will be mirrored for the red
-	// 			// alliance
-	// 			// This will flip the path being followed to the red side of the field.
-	// 			// THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+  private void setupPathPlanner() {
+		RobotConfig config;
+		try {
+			config = RobotConfig.fromGUISettings();
+		} catch (Exception e) {
+			// Handle exception as needed
+			e.printStackTrace();
+			return;
+		}
+		AutoBuilder.configure(
+			this::getPose,
+			(pose) -> {
+				// this.resetPose(pose);	
+			},
+			this::getRelativeSpeeds,
+			(speeds) -> this.driveFieldOriented(speeds),
+			    new PPHolonomicDriveController(
+					new PIDConstants(3.3, 0.0, 0), // Translation PID constants
+					new PIDConstants(Math.PI * 1.6, 0.0, 0) // Rotation PID constants
+      ),
+			config,
+			() -> {
+				// Boolean supplier that controls when the path will be mirrored for the red
+				// alliance
+				// This will flip the path being followed to the red side of the field.
+				// THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
-	// 			var alliance = DriverStation.getAlliance();
-	// 			if (alliance.isPresent()) {
-	// 				return alliance.get() == DriverStation.Alliance.Red;
-	// 			}
-	// 			return false;
-	// 		},
-	// 		this);
-	// }
+				var alliance = DriverStation.getAlliance();
+				if (alliance.isPresent()) {
+					return alliance.get() == DriverStation.Alliance.Red;
+				}
+				return false;
+			},
+			this);
+	}
 
 
     public SwerveDrive getSwerveDrive() {
@@ -196,7 +199,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putNumberArray("Measured States", swervelib.telemetry.SwerveDriveTelemetry.measuredChassisSpeeds);
         SmartDashboard.putNumberArray("SwerveModuleStates", swervelib.telemetry.SwerveDriveTelemetry.measuredStates);
-        //SmartDashboard.putData();
+        SmartDashboard.putNumberArray("Vision Estimated Pose", LimelightHelpers.getBotPose("limelight"));
         
     }
 
