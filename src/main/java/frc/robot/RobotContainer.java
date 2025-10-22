@@ -31,51 +31,48 @@ import swervelib.SwerveInputStream;
  */
 
 public class RobotContainer {
-	 private final SendableChooser<Command> autoChooser;
+	private final SendableChooser<Command> autoChooser;
 	// The robot's subsystems and commands are defined here...
 	private SwerveDriveSubsystem m_swerve;
 
 	// Replace with CommandPS4Controller or CommandJoystick if needed
-	private final CommandXboxController  m_driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
+	private final CommandXboxController m_driverController = new CommandXboxController(
+			OperatorConstants.kDriverControllerPort);
 	// private ElevatorSubsystem elevator;
 
 	// private final Joystick m_driverController = new Joystick(0);
 	// private final Button robotCentric = new m_driverController.getAsBoolean();
-		// SendableChooser<Command>   autoChooser;
-		
+	// SendableChooser<Command> autoChooser;
+
 	/**
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
 	 */
 	public RobotContainer() {
 
-		m_swerve = new SwerveDriveSubsystem();		
+		m_swerve = new SwerveDriveSubsystem();
 		autoChooser = AutoBuilder.buildAutoChooser();
 		SmartDashboard.putData("Auto Mode", autoChooser);
-		
 
 		// elevator = new ElevatorSubsystem(20);
 		// Command moveElevatorToTop = elevator.goToSetpointCommand(50.0); // Example
 		// target height
-		SwerveInputStream driveAngularVelocity = SwerveInputStream.of(m_swerve.getSwerveDrive(),
-		() -> m_driverController.getLeftY(),
-		() -> m_driverController.getLeftX()) // Axis which give the desired translational angle and speed.
-		.withControllerRotationAxis(m_driverController::getRightX) // Axis which give the desired angular velocity.
-		.deadband(0.01)                  // Controller deadband
-		.scaleTranslation(0.8)           // Scaled controller translation axis
-		.allianceRelativeControl(true);  // Alliance relative controls.
+		SwerveInputStream driveStream = SwerveInputStream.of(m_swerve.getSwerveDrive(),
+				() -> m_driverController.getLeftY(),
+				() -> m_driverController.getLeftX()) // Axis which give the desired translational angle and speed.
+				.withControllerRotationAxis(m_driverController::getRightX) // Axis which give the desired angular velocity
+				.deadband(0.01) // Controller deadband
+				.scaleTranslation(0.8) // Scaled controller translation axis
+				.allianceRelativeControl(true); // Alliance relative controls. (A utility to automatically convert inversions)
 
-	       SwerveInputStream driveDirectAngle = driveAngularVelocity.copy()  // Copy the stream so further changes do not affect driveAngularVelocity
-		.withControllerHeadingAxis(m_driverController::getRightX,
-					m_driverController::getRightY) // Axis which give the desired heading angle using trigonometry.
-		.headingWhile(true); // Enable heading based control
+		SwerveInputStream driveDirectAngle = driveStream.copy() // Copy the stream so further changes do not affect
+																// driveAngularVelocity
+				.withControllerHeadingAxis(m_driverController::getRightX,
+						m_driverController::getRightY) // Axis which give the desired heading angle using trigonometry.
+				.headingWhile(true); // Enable heading based control
 
 		m_swerve.setDefaultCommand(
-			m_swerve.driveCommand(driveAngularVelocity) // or driveDirectAngle
+				m_swerve.driveCommand(driveStream) // or driveDirectAngle
 		);
-		    		
-
-
-
 
 		// Configure the trigger bindings
 		configureBindings();
@@ -95,12 +92,13 @@ public class RobotContainer {
 	 * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
 	 * joysticks}.
 	 * 
-	 * */
+	 */
 	private void configureBindings() {
 
-		//driverController.x().onTrue((Commands.runOnce(m_swerve::zeroGyro)));
-	
+		// driverController.x().onTrue((Commands.runOnce(m_swerve::zeroGyro)));
+
 	}
+
 	public Command getAutonomousCommand() {
 		// This method loads the auto when it is called, however, it is recommended
 		// to first load your paths/autos when code starts, then return the

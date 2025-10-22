@@ -53,6 +53,11 @@ public class Limelight {
         return es == null ? Optional.empty() : Optional.ofNullable(es.pose);
     }
 
+    public Optional<PoseEstimate> getPoseEstimate() {
+        PoseEstimate es = LimelightHelpers.getBotPoseEstimate_wpiBlue(this.name);
+        return es == null ? Optional.empty() : Optional.ofNullable(es);
+    }
+
     public void resetPose(Pose2d initialPose)
     {
         LimelightHelpers.SetRobotOrientation(this.name, initialPose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
