@@ -1,9 +1,10 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkLimitSwitch;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+
 //import com.revrobotics.spark.SparkLimitSwitch.Type;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 

@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.ProgrammingExampleSubsystem;
 import frc.robot.subsystems.SwerveDriveSubsystem;
 import swervelib.SwerveInputStream;
@@ -24,7 +23,6 @@ import swervelib.SwerveInputStream;
 public class Robot extends TimedRobot {
 	private Command m_autonomousCommand;
 	private final RobotContainer m_robotContainer;
-	private final ExampleSubsystem example;
 	private final ProgrammingExampleSubsystem programmingExampleSubsystem;
 	private final XboxController controller;
 
@@ -42,8 +40,6 @@ public class Robot extends TimedRobot {
 		// and put our
 		// autonomous chooser on the dashboard.
 		m_robotContainer = new RobotContainer();
-
-		example = new ExampleSubsystem();
 		programmingExampleSubsystem = new ProgrammingExampleSubsystem();
 		// swerve = new SwerveDriveSubsystem();
 
@@ -112,19 +108,22 @@ public class Robot extends TimedRobot {
 		if (m_autonomousCommand != null) {
 			m_autonomousCommand.cancel();
 		}
+		// NOTE FROM AARON: Put this ^ inside of autonomousExit()
 	}
 
-	/** This function is called periodically during operator control. */
 	@Override
 	public void teleopPeriodic() {
-		if (controller.getAButton())
-		{
-			programmingExampleSubsystem.intake();
+		if (controller.getYButton()) {
+			ProgrammingExampleSubsystem.intake();
+		} else if (controller.getAButton()) {
+			ProgrammingExampleSubsystem.score();
+		} else if (controller.getXButton()) {
+			ProgrammingExampleSubsystem.up();
+		} else if (controller.getBButton()) {
+			ProgrammingExampleSubsystem.down();
+		} else {
+			ProgrammingExampleSubsystem.stop();
 		}
-		if (controller.getBButton()) {
-			programmingExampleSubsystem.score();
-		}
-
 	}
 
 	@Override
@@ -146,5 +145,6 @@ public class Robot extends TimedRobot {
 	/** This function is called periodically whilst in simulation. */
 	@Override
 	public void simulationPeriodic() {
+		
 	}
 }
